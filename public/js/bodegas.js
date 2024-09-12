@@ -1,6 +1,6 @@
 $(document).ready(function(){
     tblreferencias();
-    getPagination('#productos');
+    getPagination('#existencias');
 });
 
 function formatDate(date) {
@@ -25,7 +25,7 @@ $(document).ready(function () {
             $('.BusquedaRapida tr').filter(function () {
                 return ValorBusqueda.test($(this).text());
             }).show()
-            getPagination('#productos');
+            getPagination('#existencias');
         })
     }(jQuery));
 });
