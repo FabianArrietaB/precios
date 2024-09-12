@@ -86,12 +86,15 @@ function existencias(){
                     `
                 });
                 document.getElementById('tblexistencias').innerHTML = tbl;
+                $('#filter').show();
             }
         }
     });
 }
 
 function getPagination(table) {
+    $('#filter').hide();
+    $('.pagination').hide();
     var lastPage = 1;
     $('#maxRows').on('change', function(evt) {
     //$('.paginationprev').html('');						// reset pagination
@@ -104,6 +107,7 @@ function getPagination(table) {
         var maxRows = parseInt($(this).val()); // get Max Rows from select option
         if (maxRows >= 5000) {
             $('.pagination').hide();
+            $('#filter').hide();
         } else {
             $('.pagination').show();
         }

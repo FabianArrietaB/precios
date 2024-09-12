@@ -48,6 +48,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" id="filter">
+                        <div class="col-xs-12 col-sm-12 col-md-10">
+                            <input class="form-control me-xl-2" type="search" placeholder="Ingrese Datos para Busqueda" name="FiltrarContenido" id="FiltrarContenido">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-2">
+                        <div class="input-group">
+                            <label class="input-group-text" for="maxRows">Options</label>
+                            <select class="form-select" name="state" id="maxRows">
+                                <option value="5000" selected>Todas</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="70">70</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
