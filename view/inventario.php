@@ -56,7 +56,7 @@
                         <div class="input-group">
                             <label class="input-group-text" for="maxRows">Options</label>
                             <select class="form-select" name="state" id="maxRows">
-                                <option value="5000" selected>Todas</option>
+                                <option value="0">Todas</option>
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="15">15</option>

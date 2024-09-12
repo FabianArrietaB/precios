@@ -86,9 +86,7 @@ function tblreferencias(){
 }
 
 function getPagination(table) {
-    miSelect = $("#maxRows").val();
-    //defino selected la primera option
-    miSelect.selectedIndex = 0;
+    $("#maxRows option:eq(0)").attr("selected","selected");
     var lastPage = 1;
     $('#maxRows').on('change', function(evt) {
     //$('.paginationprev').html('');						// reset pagination

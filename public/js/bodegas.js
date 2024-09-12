@@ -2,6 +2,12 @@ $(document).ready(function(){
     getPagination('#existencias');
 });
 
+const formatterPeso = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0
+})
+
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -24,7 +30,6 @@ $(document).ready(function () {
             $('.BusquedaRapida tr').filter(function () {
                 return ValorBusqueda.test($(this).text());
             }).show()
-            getPagination('#existencias');
         })
     }(jQuery));
 });
@@ -58,42 +63,45 @@ function existencias(){
         beforeSend: function() {
             Swal.fire({
                 icon: 'info',
-                title: 'Cargando Datos',
+                title: 'Cargando Informacion',
                 showConfirmButton: false,
                 timer: 8000
             });
             document.getElementById('tblexistencias').innerHTML = '';
         },
-        success: function(res) {
-            console.log(res);
-
-            if (res.data.length != 0) {
-                
+        success: function(data) {
+            console.log(data);
+            if (data.length != 0) {
                 let tbl = '';
-
-                res.detalle_cuenta.forEach((item, index) => {
+                data.forEach((item, index) => {
                     tbl += `
                         <tr">
-                            <td>${item.REFERENCIA}</td>
-                            <td>${item.NOMBRE}</td>
-                            <td >${format_number(item.COSTO)}</td>
-                            <td >${item.iva * 100} %</td>
-                            <td >${format_number(item.STOCK_INICIAL)}</td>
-                            <td >${format_number(item.STOCK_FOMPLUS)}</td>
-                            <td >${format_number(item.ENTRADAS)}</td>
-                            <td >${format_number(item.SALIDAS)}</td>
+                            <td style="width: 5%" class="text-center">${++index}</td>
+                            <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
+                            <td style="width: 25%" class="text-center">${item.NOMBRE}</td>
+                            <td class="text-center" style="width: 10%" >${formatterPeso.format(Number(item.COSTO))}</td>
+                            <td class="text-center" style="width: 10%" >${Math.round(item.IVA * 100)} %</td>
+                            <td class="text-center text-info" style="width: 10%">${Math.round(item.STOCK_INICIAL)}</td>
+                            <td class="text-center text-success" style="width: 10%">${Math.round(item.STOCK_FOMPLUS)}</td>
+                            <td class="text-center text-warning" style="width: 10%">${Math.round(item.ENTRADAS)}</td>
+                            <td class="text-center text-danger" style="width: 10%">${Math.round(item.SALIDAS)}</td>
                         </tr>
                     `
                 });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Informacion Cargada',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
                 document.getElementById('tblexistencias').innerHTML = tbl;
-                $('#filter').show();
             }
         }
     });
 }
 
 function getPagination(table) {
-    $('#filter').hide();
+    $("#maxRows option:eq(0)").attr("selected","selected");
     $('.pagination').hide();
     var lastPage = 1;
     $('#maxRows').on('change', function(evt) {
@@ -105,9 +113,8 @@ function getPagination(table) {
         .remove();
         var trnum = 0; // reset tr counter
         var maxRows = parseInt($(this).val()); // get Max Rows from select option
-        if (maxRows >= 5000) {
+        if (maxRows == 0) {
             $('.pagination').hide();
-            $('#filter').hide();
         } else {
             $('.pagination').show();
         }
