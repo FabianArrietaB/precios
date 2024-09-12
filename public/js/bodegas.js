@@ -222,20 +222,138 @@ function existencias(){
     });
 }
 
-function salidas(referencia, producto){
-    var title = `
-        <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Salidas de <strong>${producto} - ${referencia}</strong></h5>
-    `
-    document.getElementById(`title`).innerHTML = title
-    modal.modal('show')
-    
-}
-
-function entradas(referencia, producto){
+function entradas(referencia, producto, desde, hasta, bodega){
     var title = `
         <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Entradas de <strong>${producto} - ${referencia}</strong></h5>
     `
+    var body = `
+            <div class="row item-center">
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Precio Compra</span>
+                        </div>
+                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${desde}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Iva</span>
+                        </div>
+                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${hasta}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Costo + Iva</span>
+                        </div>
+                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${bodega}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="row student text-center" style="align-items: center">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped font-small">
+                            <thead>
+                                <tr>
+                                    <th scope="col" >FECHA DOC</th>
+                                    <th scope="col" >MOVIMIENTO</th>
+                                    <th scope="col" >PREFIJO</th>
+                                    <th scope="col" >DOCUMENTO</th>
+                                    <th scope="col" >CANTIDAD</th>
+                                    <th scope="col" >VALOR UND</th>
+                                    <th scope="col" >VALOR TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblmovimientos">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            `
     document.getElementById(`title`).innerHTML = title
+    document.getElementById(`body`).innerHTML = body
+    $.ajax({
+        url: "../controller/inventarios/entradas.php",
+        type: "GET",
+        data : {desde : desde, hasta : hasta, bodega : bodega, refere : referencia},
+        dataType: 'json',
+        success:function(data){
+            let tbl = '';
+            data.forEach((item) => {
+                producto = (item.producto.replace("\"", ""))
+                tbl += `
+                <tr ondblclick="precio('${item.refere}', '${producto}', '${item.codigo}', '${item.nombre}', '${item.valor}', '${costo}', '${iva}', '${costoiva}', '${fecha}')" class="bg-white border-b">
+                    <td style="width: 10%" class="text-center">${item.nombre}</td>
+                    <td style="width: 10%" class="text-center ${clase}">${formatterPeso.format(Number(valor))}</td>
+                </tr>
+                `
+            });
+            document.getElementById('tblprecios').innerHTML = tbl
+        }
+    });
     modal.modal('show')
-    
+}
+
+function salidas(referencia, producto, desde, hasta, bodega){
+    var title = `
+        <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Salidas de <strong>${producto} - ${referencia}</strong></h5>
+        <h5>${desde} ${hasta} ${bodega}</h5>
+    `
+    var body = `
+            <div class="row item-center">
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Precio Compra</span>
+                        </div>
+                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${desde}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Iva</span>
+                        </div>
+                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${hasta}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">Costo + Iva</span>
+                        </div>
+                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${bodega}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="row student text-center" style="align-items: center">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped font-small">
+                            <thead>
+                                <tr>
+                                    <th scope="col" >FECHA DOC</th>
+                                    <th scope="col" >MOVIMIENTO</th>
+                                    <th scope="col" >PREFIJO</th>
+                                    <th scope="col" >DOCUMENTO</th>
+                                    <th scope="col" >CANTIDAD</th>
+                                    <th scope="col" >VALOR UND</th>
+                                    <th scope="col" >VALOR TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblmovimientos">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            `
+    document.getElementById(`title`).innerHTML = title
+    document.getElementById(`body`).innerHTML = body
+    modal.modal('show')
 }

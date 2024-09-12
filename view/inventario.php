@@ -81,8 +81,8 @@
                                     <th scope="col" >IVA</th>
                                     <th scope="col" >STOCK INICIAL</th>
                                     <th scope="col" >STOCK FOMPLUS</th>
-                                    <th scope="col" >SALIDAS</th>
                                     <th scope="col" >ENTRADAS</th>
+                                    <th scope="col" >SALIDAS</th>
                                 </tr>
                             </thead>
                             <tbody id="tblexistencias" class="BusquedaRapida">

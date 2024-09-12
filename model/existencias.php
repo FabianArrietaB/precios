@@ -32,11 +32,11 @@
             return $data;
         }
 
-        public function entradas($referencia){
+        public function moventradas($referencia,$desde,$hasta,$bodega){
 
         }
 
-        public function salidas($referencia){
+        public function movsalidas($referencia,$desde,$hasta,$bodega){
             
         }
     }
