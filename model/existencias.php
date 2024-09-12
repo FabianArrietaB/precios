@@ -33,11 +33,47 @@
         }
 
         public function moventradas($referencia,$desde,$hasta,$bodega){
-
+            $con = new Conexion;
+            $sql = $con->conectarFomplus()->prepare("SELECT 
+                m.MOV_REFER, 
+                m.MOV_FECHA,
+                t.TIP_NOMBRE,
+                m.MOV_PREFIJ,
+                m.MOV_NUMDOC,
+                m.MOV_CANTID,
+                m.MOV_VALOR
+            FROM METROCERAMICA.dbo.MOVINV2024 m
+            INNER JOIN METROCERAMICA.dbo.TIPINV t ON m.MOV_TIPMOV = t.TIP_CODIGO
+            WHERE m.MOV_TIPMOV IN ('01', '02', '03', '05', '06', '07') 
+            AND MOV_FECHA BETWEEN CAST('$desde' as date) AND CAST('$hasta' as date) 
+            AND MOV_BODEGA = '$bodega' AND MOV_ESTREG != 'S' AND MOV_ESTREG != 'A'
+            AND MOV_REFER = '$referencia'
+            ORDER BY MOV_FECHA");
+            $sql->execute();
+            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
         }
 
         public function movsalidas($referencia,$desde,$hasta,$bodega){
-            
+            $con = new Conexion;
+            $sql = $con->conectarFomplus()->prepare("SELECT 
+                m.MOV_REFER, 
+                m.MOV_FECHA,
+                t.TIP_NOMBRE,
+                m.MOV_PREFIJ,
+                m.MOV_NUMDOC,
+                m.MOV_CANTID,
+                m.MOV_VALOR
+            FROM METROCERAMICA.dbo.MOVINV2024 m
+            INNER JOIN METROCERAMICA.dbo.TIPINV t ON m.MOV_TIPMOV = t.TIP_CODIGO
+            WHERE m.MOV_TIPMOV IN ('51', '52', '53', '55', '56', '57') 
+            AND MOV_FECHA BETWEEN CAST('$desde' as date) AND CAST('$hasta' as date) 
+            AND MOV_BODEGA = '$bodega' AND MOV_ESTREG != 'S' AND MOV_ESTREG != 'A'
+            AND MOV_REFER = '$referencia'
+            ORDER BY MOV_FECHA");
+            $sql->execute();
+            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
         }
     }
 ?>
