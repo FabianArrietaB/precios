@@ -74,11 +74,14 @@ function existencias(){
                 res.detalle_cuenta.forEach((item, index) => {
                     tbl += `
                         <tr">
-                            <th>${++index}</th>
-                            <td>${item.cuenta_detalle}</td>
-                            <td>${item.detalle}</td>
-                            <td class="que se ruede a la derecha">${format_number(item.cantidad)}</td>
-                            <td class="que se ruede a la derecha">${format_number(item.total)}</td>
+                            <td>${item.REFERENCIA}</td>
+                            <td>${item.NOMBRE}</td>
+                            <td >${format_number(item.COSTO)}</td>
+                            <td >${item.iva * 100} %</td>
+                            <td >${format_number(item.STOCK_INICIAL)}</td>
+                            <td >${format_number(item.STOCK_FOMPLUS)}</td>
+                            <td >${format_number(item.ENTRADAS)}</td>
+                            <td >${format_number(item.SALIDAS)}</td>
                         </tr>
                     `
                 });
