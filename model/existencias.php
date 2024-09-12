@@ -35,13 +35,13 @@
         public function moventradas($referencia,$desde,$hasta,$bodega){
             $con = new Conexion;
             $sql = $con->conectarFomplus()->prepare("SELECT 
-                m.MOV_REFER, 
-                m.MOV_FECHA,
-                t.TIP_NOMBRE,
-                m.MOV_PREFIJ,
-                m.MOV_NUMDOC,
-                m.MOV_CANTID,
-                m.MOV_VALOR
+                m.MOV_REFER REFERENCIA, 
+                m.MOV_FECHA FECHA,
+                t.TIP_NOMBRE MOVIMIENTO,
+                m.MOV_PREFIJ PREFIJO,
+                m.MOV_NUMDOC DOCUMENTO,
+                m.MOV_CANTID CANTIDAD,
+                m.MOV_VALOR  VALOR
             FROM METROCERAMICA.dbo.MOVINV2024 m
             INNER JOIN METROCERAMICA.dbo.TIPINV t ON m.MOV_TIPMOV = t.TIP_CODIGO
             WHERE m.MOV_TIPMOV IN ('01', '02', '03', '05', '06', '07') 
@@ -57,13 +57,13 @@
         public function movsalidas($referencia,$desde,$hasta,$bodega){
             $con = new Conexion;
             $sql = $con->conectarFomplus()->prepare("SELECT 
-                m.MOV_REFER, 
-                m.MOV_FECHA,
-                t.TIP_NOMBRE,
-                m.MOV_PREFIJ,
-                m.MOV_NUMDOC,
-                m.MOV_CANTID,
-                m.MOV_VALOR
+                m.MOV_REFER REFERENCIA, 
+                m.MOV_FECHA FECHA,
+                t.TIP_NOMBRE MOVIMIENTO,
+                m.MOV_PREFIJ PREFIJO,
+                m.MOV_NUMDOC DOCUMENTO,
+                m.MOV_CANTID CANTIDAD,
+                m.MOV_VALOR  VALOR
             FROM METROCERAMICA.dbo.MOVINV2024 m
             INNER JOIN METROCERAMICA.dbo.TIPINV t ON m.MOV_TIPMOV = t.TIP_CODIGO
             WHERE m.MOV_TIPMOV IN ('51', '52', '53', '55', '56', '57') 
