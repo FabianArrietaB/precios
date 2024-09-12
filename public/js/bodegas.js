@@ -2,6 +2,8 @@ $(document).ready(function(){
     getPagination('#existencias');
 });
 
+let modal = $('#modaldocumentos');
+
 const formatterPeso = new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
@@ -49,56 +51,6 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() =
     .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
     .forEach(tr => tbody.appendChild(tr) );
 })));
-
-function existencias(){
-    desde = $("#desde").val();
-    hasta = $("#hasta").val();
-    bodega = $("#sede").val();
-    console.log(desde, hasta, bodega)
-    $.ajax({
-        url : "../controller/inventarios/existencias.php",
-        type : 'GET',
-        data : {desde : desde, hasta : hasta, bodega : bodega},
-        dataType: 'json',
-        beforeSend: function() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Cargando Informacion',
-                showConfirmButton: false,
-                timer: 8000
-            });
-            document.getElementById('tblexistencias').innerHTML = '';
-        },
-        success: function(data) {
-            console.log(data);
-            if (data.length != 0) {
-                let tbl = '';
-                data.forEach((item, index) => {
-                    tbl += `
-                        <tr">
-                            <td style="width: 5%" class="text-center">${++index}</td>
-                            <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
-                            <td style="width: 25%" class="text-center">${item.NOMBRE}</td>
-                            <td class="text-center" style="width: 10%" >${formatterPeso.format(Number(item.COSTO))}</td>
-                            <td class="text-center" style="width: 10%" >${Math.round(item.IVA * 100)} %</td>
-                            <td class="text-center text-info" style="width: 10%">${Math.round(item.STOCK_INICIAL)}</td>
-                            <td class="text-center text-success" style="width: 10%">${Math.round(item.STOCK_FOMPLUS)}</td>
-                            <td class="text-center text-warning" style="width: 10%">${Math.round(item.ENTRADAS)}</td>
-                            <td class="text-center text-danger" style="width: 10%">${Math.round(item.SALIDAS)}</td>
-                        </tr>
-                    `
-                });
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Informacion Cargada',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-                document.getElementById('tblexistencias').innerHTML = tbl;
-            }
-        }
-    });
-}
 
 function getPagination(table) {
     $("#maxRows option:eq(0)").attr("selected","selected");
@@ -218,3 +170,72 @@ $(function() {
         $(this).prepend('<td>' + id + '</td>');
     });
 });
+
+function existencias(){
+    desde = $("#desde").val();
+    hasta = $("#hasta").val();
+    bodega = $("#sede").val();
+    console.log(desde, hasta, bodega)
+    $.ajax({
+        url : "../controller/inventarios/existencias.php",
+        type : 'GET',
+        data : {desde : desde, hasta : hasta, bodega : bodega},
+        dataType: 'json',
+        beforeSend: function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Cargando Informacion',
+                showConfirmButton: false,
+                timer: 8000
+            });
+            document.getElementById('tblexistencias').innerHTML = '';
+        },
+        success: function(data) {
+            console.log(data);
+            if (data.length != 0) {
+                let tbl = '';
+                data.forEach((item, index) => {
+                    producto = (item.NOMBRE.replace("\"", ""))
+                    tbl += `
+                        <tr">
+                            <td style="width: 5%" class="text-center">${++index}</td>
+                            <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
+                            <td style="width: 25%" class="text-center">${item.NOMBRE}</td>
+                            <td class="text-center" style="width: 10%" >${formatterPeso.format(Number(item.COSTO))}</td>
+                            <td class="text-center" style="width: 10%" >${Math.round(item.IVA * 100)} %</td>
+                            <td class="text-center text-info" style="width: 10%">${Math.round(item.STOCK_INICIAL)}</td>
+                            <td class="text-center text-success" style="width: 10%">${Math.round(item.STOCK_FOMPLUS)}</td>
+                            <td ondblclick="entradas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')" class="text-center text-warning" style="width: 10%">${Math.round(item.ENTRADAS)}</td>
+                            <td ondblclick="salidas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')" class="text-center text-danger" style="width: 10%">${Math.round(item.SALIDAS)}</td>
+                        </tr>
+                    `
+                });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Informacion Cargada',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                document.getElementById('tblexistencias').innerHTML = tbl;
+            }
+        }
+    });
+}
+
+function salidas(referencia, producto){
+    var title = `
+        <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Salidas de <strong>${producto} - ${referencia}</strong></h5>
+    `
+    document.getElementById(`title`).innerHTML = title
+    modal.modal('show')
+    
+}
+
+function entradas(referencia, producto){
+    var title = `
+        <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Entradas de <strong>${producto} - ${referencia}</strong></h5>
+    `
+    document.getElementById(`title`).innerHTML = title
+    modal.modal('show')
+    
+}

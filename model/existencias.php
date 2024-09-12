@@ -32,5 +32,12 @@
             return $data;
         }
 
+        public function entradas($referencia){
+
+        }
+
+        public function salidas($referencia){
+            
+        }
     }
 ?>
