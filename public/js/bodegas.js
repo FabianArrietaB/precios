@@ -227,32 +227,6 @@ function entradas(referencia, producto, desde, hasta, bodega){
         <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Entradas de <strong>${producto} - ${referencia}</strong></h5>
     `
     var body = `
-            <div class="row item-center">
-                <div class="col-md-4">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Precio Compra</span>
-                        </div>
-                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${desde}">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Iva</span>
-                        </div>
-                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${hasta}">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Costo + Iva</span>
-                        </div>
-                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${bodega}">
-                    </div>
-                </div>
-            </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="row student text-center" style="align-items: center">
                     <div class="table-responsive">
@@ -285,15 +259,19 @@ function entradas(referencia, producto, desde, hasta, bodega){
         success:function(data){
             let tbl = '';
             data.forEach((item) => {
-                producto = (item.producto.replace("\"", ""))
                 tbl += `
-                <tr ondblclick="precio('${item.refere}', '${producto}', '${item.codigo}', '${item.nombre}', '${item.valor}', '${costo}', '${iva}', '${costoiva}', '${fecha}')" class="bg-white border-b">
-                    <td style="width: 10%" class="text-center">${item.nombre}</td>
-                    <td style="width: 10%" class="text-center ${clase}">${formatterPeso.format(Number(valor))}</td>
+                <tr class="bg-white border-b">
+                    <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
+                    <td style="width: 10%" class="text-center">${item.MOVIMIENTO}</td>
+                    <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
+                    <td style="width: 10%" class="text-center">${item.DOCUMENTO}</td>
+                    <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
+                    <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
+                    <td class="text-center" style="width: 10%" >${formatterPeso.format(Number(item.VALOR))}</td>
                 </tr>
                 `
             });
-            document.getElementById('tblprecios').innerHTML = tbl
+            document.getElementById('tblmovimientos').innerHTML = tbl
         }
     });
     modal.modal('show')
@@ -302,35 +280,8 @@ function entradas(referencia, producto, desde, hasta, bodega){
 function salidas(referencia, producto, desde, hasta, bodega){
     var title = `
         <h5 class="modal-title" role="title" id="exampleModalLabel">Movimientos Salidas de <strong>${producto} - ${referencia}</strong></h5>
-        <h5>${desde} ${hasta} ${bodega}</h5>
     `
     var body = `
-            <div class="row item-center">
-                <div class="col-md-3">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Precio Compra</span>
-                        </div>
-                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${desde}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Iva</span>
-                        </div>
-                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${hasta}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Costo + Iva</span>
-                        </div>
-                        <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${bodega}">
-                    </div>
-                </div>
-            </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="row student text-center" style="align-items: center">
                     <div class="table-responsive">
@@ -355,5 +306,28 @@ function salidas(referencia, producto, desde, hasta, bodega){
             `
     document.getElementById(`title`).innerHTML = title
     document.getElementById(`body`).innerHTML = body
+    $.ajax({
+        url: "../controller/inventarios/salidas.php",
+        type: "GET",
+        data : {desde : desde, hasta : hasta, bodega : bodega, refere : referencia},
+        dataType: 'json',
+        success:function(data){
+            let tbl = '';
+            data.forEach((item) => {
+                tbl += `
+                <tr class="bg-white border-b">
+                    <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
+                    <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
+                    <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
+                    <td style="width: 20%" class="text-center">${item.DOCUMENTO}</td>
+                    <td style="width: 5%" class="text-center">${Math.round(item.CANTIDAD)}</td>
+                    <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
+                    <td style="width: 10%" class="text-center"  >${formatterPeso.format(Number(item.VALOR))}</td>
+                </tr>
+                `
+            });
+            document.getElementById('tblmovimientos').innerHTML = tbl
+        }
+    });
     modal.modal('show')
 }
