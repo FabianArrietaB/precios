@@ -43,7 +43,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-3 mb-2">
                             <div class="d-grid gap-2">
                                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                    <button type="button" class="btn btn-outline-primary" onclick="consulta()">LISTA</button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="existencias()">LISTA</button>
                                 </div>
                             </div>
                         </div>

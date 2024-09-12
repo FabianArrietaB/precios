@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    tblreferencias();
     getPagination('#existencias');
 });
 
@@ -46,49 +45,50 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() =
     .forEach(tr => tbody.appendChild(tr) );
 })));
 
-function tblreferencias(){
+function existencias(){
+    desde = $("#desde").val();
+    hasta = $("#hasta").val();
+    bodega = $("#sede").val();
+    console.log(desde, hasta, bodega)
     $.ajax({
-        url : "../controller/inventarios/stock.php",
+        url : "../controller/inventarios/existencias.php",
         type : 'GET',
+        data : {desde : desde, hasta : hasta, bodega : bodega},
         dataType: 'json',
-        success: function (data) {
-            //console.log(data);
-            let tbl = '';
-            data.forEach((item, index) => {
-                if(item.STOCK <= 5 && item.STOCK >= 1){
-                    estado = 'QUEDAN MENOS DE 5 UND'
-                    clase = 'text-warning'
-                }else if(item.STOCK >= 6 && item.STOCK <=10){
-                    estado = 'QUEDAN MENOS DE 10 UND'
-                    clase = 'text-info'
-                }else if(item.STOCK >= 11){
-                    estado = 'CON EXISTENCIAS'
-                    clase = 'text-success'
-                }else{
-                    estado = 'SIN STOCK'
-                    clase = 'text-danger'
-                }
-                tbl += `
-                    <tr class="bg-white border-b">
-                        <td style="width: 10%" class="text-center">${++index}</td>
-                        <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
-                        <td class="text-center" style="width: 10%" >${item.NOMBRE}</td>
-                        <td class="text-center" style="width: 10%" >${item.BODEGA}</td>
-                        <td class="text-center" style="width: 10%" >${item.STOCK}</td>
-                        <td class="text-center" style="width: 15%" >${formatDate(item.FECCOMPRA)}</td>
-                        <td class="text-center ${clase} " style="width: 10%" >${estado}</td>
-                    </tr>
-                `
+        beforeSend: function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Cargando Datos',
+                showConfirmButton: false,
+                timer: 8000
             });
-            document.getElementById('tblstock').innerHTML = tbl
+            document.getElementById('tblexistencias').innerHTML = '';
+        },
+        success: function(res) {
+            console.log(res);
+
+            if (res.data.length != 0) {
+                
+                let tbl = '';
+
+                res.detalle_cuenta.forEach((item, index) => {
+                    tbl += `
+                        <tr">
+                            <th>${++index}</th>
+                            <td>${item.cuenta_detalle}</td>
+                            <td>${item.detalle}</td>
+                            <td class="que se ruede a la derecha">${format_number(item.cantidad)}</td>
+                            <td class="que se ruede a la derecha">${format_number(item.total)}</td>
+                        </tr>
+                    `
+                });
+                document.getElementById('tblexistencias').innerHTML = tbl;
+            }
         }
     });
 }
 
 function getPagination(table) {
-    miSelect = $("#maxRows").val();
-    //defino selected la primera option
-    miSelect.selectedIndex = 0;
     var lastPage = 1;
     $('#maxRows').on('change', function(evt) {
     //$('.paginationprev').html('');						// reset pagination
