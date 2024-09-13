@@ -5,8 +5,6 @@
     if(isset($_SESSION['usuario']) &&
     include "permisos.php"){
     include "../model/conexion.php";
-    $con = new Conexion();
-    $conexion = $con->conectar();
 ?>
 <!-- inicio del contenido principal -->
 <div class="container-fluid">

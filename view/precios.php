@@ -3,10 +3,7 @@
     include "header.php";
     include "navbar.php";
     if(isset($_SESSION['usuario']) &&
-    $_SESSION['usuario']['prerol'] == 4 ||
-    $_SESSION['usuario']['prerol'] == 3 ||
-    $_SESSION['usuario']['prerol'] == 2 ||
-    $_SESSION['usuario']['prerol'] == 1){
+    include "permisos.php"){
     include "../model/conexion.php";
 ?>
 <!-- inicio del contenido principal -->

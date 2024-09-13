@@ -1,5 +1,9 @@
 <?php
+    session_start();
     include "../../model/inventarios.php";
-    $inventario = new Inventario();
-    echo json_encode($inventario->stock());
+    $Inventario = new Inventario();
+    $desde = $_GET['desde'];
+    $hasta = $_GET['hasta'];
+    $bodega = $_GET['bodega'];
+    echo json_encode($Inventario->stock($desde,$hasta,$bodega));
 ?>

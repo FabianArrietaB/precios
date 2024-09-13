@@ -2,6 +2,12 @@ $(document).ready(function(){
     getPagination('#existencias');
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const hasta = document.getElementById('hasta')
+    // formato ISO yyyy-mm-ddThh:mm:ss.ffffff
+    hasta.value = new Date().toISOString().split('T')[0]
+})
+
 let modal = $('#modaldocumentos');
 
 const formatterPeso = new Intl.NumberFormat('es-CO', {
@@ -9,6 +15,10 @@ const formatterPeso = new Intl.NumberFormat('es-CO', {
     currency: 'COP',
     minimumFractionDigits: 0
 })
+
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
 
 function formatDate(date) {
     var d = new Date(date),
@@ -191,6 +201,10 @@ function existencias(){
             document.getElementById('tblexistencias').innerHTML = '';
         },
         success: function(data) {
+            //selecciono el select
+            miSelect = document.getElementById("maxRows");
+            //defino selected la primera option
+            miSelect.selectedIndex = 0;
             console.log(data);
             if (data.length != 0) {
                 let tbl = '';
@@ -204,10 +218,10 @@ function existencias(){
                             <td style="width: 10%" class="text-center">${formatterPeso.format(Math.round(item.COSTO))}</td>
                             <td style="width: 5%" class="text-center">${Math.round(item.IVA * 100)} %</td>
                             <td style="width: 5%" class="text-center">${item.UNDMED}</td>
-                            <td style="width: 10%" class="text-center text-info">${Math.round(item.STOCK_INICIAL)}</td>
-                            <td style="width: 10%" class="text-center text-success">${Math.round(item.STOCK_FOMPLUS)}</td>
-                            <td style="width: 10%" class="text-center text-warning" ondblclick="entradas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')">${Math.round(item.ENTRADAS)}</td>
-                            <td style="width: 10%" class="text-center text-danger" ondblclick="salidas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')">${Math.round(item.SALIDAS)}</td>
+                            <td style="width: 10%" class="text-center text-info">${round(item.STOCK_INICIAL, 2)}</td>
+                            <td style="width: 10%" class="text-center text-success">${round(item.STOCK_FOMPLUS, 2)}</td>
+                            <td style="width: 10%" class="text-center text-warning" ondblclick="entradas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')">${round(item.ENTRADAS, 2)}</td>
+                            <td style="width: 10%" class="text-center text-danger" ondblclick="salidas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')">${round(item.SALIDAS, 2)}</td>
                         </tr>
                     `
                 });
@@ -275,7 +289,7 @@ function entradas(referencia, producto, desde, hasta, bodega){
                         <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
                         <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
                         <td style="width: 15%" class="text-center">${item.UNDMEDIDA}</td>
-                        <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
+                        <td style="width: 10%" class="text-center">${round(item.CANTIDAD, 2)}</td>
                         <td style="width: 10%" class="text-center">${formatterPeso.format(Math.round(item.VALOR / item.CANTIDAD))}</td>
                         <td style="width: 20%" class="text-center">${formatterPeso.format(Math.round(item.VALOR))}</td>
                     </tr>
@@ -284,7 +298,7 @@ function entradas(referencia, producto, desde, hasta, bodega){
                 tbl += `
                 <tr class="table-secondary">
                     <th colspan="5">TOTAL</th>
-                    <td class="text-center ${(totalcant < 0) ? 'text-danger':''}">${ Math.round(totalcant)}</td>
+                    <td class="text-center ${(totalcant < 0) ? 'text-danger':''}">${round(totalcant,2)}</td>
                     <td class="text-center ${(total < 0) ? 'text-danger':''}">${ formatterPeso.format(Math.round(total))}</td>
                     <td class="text-center ${(totalvalor < 0) ? 'text-danger':''}">${ formatterPeso.format(Math.round(totalvalor))}</td>
                 </tr>
@@ -350,18 +364,18 @@ function salidas(referencia, producto, desde, hasta, bodega){
                         <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
                         <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
                         <td style="width: 15%" class="text-center">${item.UNDMEDIDA}</td>
-                        <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
-                        <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
-                        <td style="width: 20%" class="text-center">${formatterPeso.format(Number(item.VALOR))}</td>
+                        <td style="width: 10%" class="text-center">${round(item.CANTIDAD, 2)}</td>
+                        <td style="width: 10%" class="text-center">${formatterPeso.format(Math.round(item.VALOR / item.CANTIDAD))}</td>
+                        <td style="width: 20%" class="text-center">${formatterPeso.format(Math.round(item.VALOR))}</td>
                     </tr>
                     `
                 });
                 tbl += `
                 <tr class="table-secondary">
                     <th colspan="5">TOTAL</th>
-                    <td class="text-center ${(totalcant < 0) ? 'text-danger':''}">${ Math.round(totalcant)}</td>
-                    <td class="text-center ${(total < 0) ? 'text-danger':''}">${ formatterPeso.format(Number(total))}</td>
-                    <td class="text-center ${(totalvalor < 0) ? 'text-danger':''}">${ formatterPeso.format(Number(totalvalor))}</td>
+                    <td class="text-center ${(totalcant < 0) ? 'text-danger':''}">${round(totalcant,2)}</td>
+                    <td class="text-center ${(total < 0) ? 'text-danger':''}">${ formatterPeso.format(Math.round(total))}</td>
+                    <td class="text-center ${(totalvalor < 0) ? 'text-danger':''}">${ formatterPeso.format(Math.round(totalvalor))}</td>
                 </tr>
             `
             }else{

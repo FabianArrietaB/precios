@@ -1,7 +1,24 @@
 $(document).ready(function(){
-    tblreferencias();
     getPagination('#productos');
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dateInput = document.getElementById('hasta')
+    // formato ISO yyyy-mm-ddThh:mm:ss.ffffff
+    dateInput.value = new Date().toISOString() // fecha actual en formato iso
+    // seleccionamos lo que esta a la izquierda de la T, que es la parte de la fecha
+    .split('T')[0]
+})
+
+const formatterPeso = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0
+})
+
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
 
 function formatDate(date) {
     var d = new Date(date),
@@ -46,47 +63,8 @@ document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() =
     .forEach(tr => tbody.appendChild(tr) );
 })));
 
-function tblreferencias(){
-    $.ajax({
-        url : "../controller/inventarios/stock.php",
-        type : 'GET',
-        dataType: 'json',
-        success: function (data) {
-            //console.log(data);
-            let tbl = '';
-            data.forEach((item, index) => {
-                if(item.STOCK <= 5 && item.STOCK >= 1){
-                    estado = 'QUEDAN MENOS DE 5 UND'
-                    clase = 'text-warning'
-                }else if(item.STOCK >= 6 && item.STOCK <=10){
-                    estado = 'QUEDAN MENOS DE 10 UND'
-                    clase = 'text-info'
-                }else if(item.STOCK >= 11){
-                    estado = 'CON EXISTENCIAS'
-                    clase = 'text-success'
-                }else{
-                    estado = 'SIN STOCK'
-                    clase = 'text-danger'
-                }
-                tbl += `
-                    <tr class="bg-white border-b">
-                        <td style="width: 10%" class="text-center">${++index}</td>
-                        <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
-                        <td class="text-center" style="width: 10%" >${item.NOMBRE}</td>
-                        <td class="text-center" style="width: 10%" >${item.BODEGA}</td>
-                        <td class="text-center" style="width: 10%" >${item.STOCK}</td>
-                        <td class="text-center" style="width: 15%" >${formatDate(item.FECCOMPRA)}</td>
-                        <td class="text-center ${clase} " style="width: 10%" >${estado}</td>
-                    </tr>
-                `
-            });
-            document.getElementById('tblstock').innerHTML = tbl
-        }
-    });
-}
 
 function getPagination(table) {
-    $("#maxRows option:eq(0)").attr("selected","selected");
     var lastPage = 1;
     $('#maxRows').on('change', function(evt) {
     //$('.paginationprev').html('');						// reset pagination
@@ -202,3 +180,69 @@ $(function() {
         $(this).prepend('<td>' + id + '</td>');
     });
 });
+
+function existencias(){
+    desde = $("#desde").val();
+    hasta = $("#hasta").val();
+    bodega = $("#sede").val();
+    console.log(desde, hasta, bodega)
+    $.ajax({
+        url : "../controller/inventarios/stock.php",
+        type : 'GET',
+        data : {desde : desde, hasta : hasta, bodega : bodega},
+        dataType: 'json',
+        beforeSend: function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Cargando Informacion',
+                showConfirmButton: false,
+                timer: 8000
+            });
+            document.getElementById('tblstock').innerHTML = '';
+        },
+        success: function(data) {
+            //selecciono el select
+            miSelect = document.getElementById("maxRows");
+            //defino selected la primera option
+            miSelect.selectedIndex = 0;
+            console.log(data);
+            if (data.length != 0) {
+                let tbl = '';
+                data.forEach((item, index) => {
+                    producto = (item.NOMBRE.replace("\"", ""))
+                    if(item.STOCK <= 5 && item.STOCK >= 1){
+                        estado = 'QUEDAN MENOS DE 5 UND'
+                        clase = 'text-warning'
+                    }else if(item.STOCK >= 6 && item.STOCK <=10){
+                        estado = 'QUEDAN MENOS DE 10 UND'
+                        clase = 'text-info'
+                    }else if(item.STOCK >= 11){
+                        estado = 'CON EXISTENCIAS'
+                        clase = 'text-success'
+                    }else{
+                        estado = 'SIN STOCK'
+                        clase = 'text-danger'
+                    }
+                    tbl += `
+                        <tr">
+                            <td style="width: 5%" class="text-center">${++index}</td>
+                            <td style="width: 15%" class="text-center">${item.REFERENCIA}</td>
+                            <td style="width: 25%" class="text-center">${item.NOMBRE}</td>
+                            <td style="width: 10%" class="text-center text-info">${round(item.STOCK, 2)}</td>
+                            <td style="width: 15%" class="text-center">${item.BODEGA}</td>
+                            <td class="text-center" style="width: 15%" >${formatDate(item.FECCOMPRA)}</td>
+                            <td class="text-center ${clase} " style="width: 15%" >${estado}</td>
+                        </tr>
+                    `
+                });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Informacion Cargada',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                document.getElementById('tblstock').innerHTML = tbl;
+            }
+        }
+    });
+}

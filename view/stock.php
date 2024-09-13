@@ -3,10 +3,7 @@
     include "header.php";
     include "navbar.php";
     if(isset($_SESSION['usuario']) &&
-    $_SESSION['usuario']['prerol'] == 4 ||
-    $_SESSION['usuario']['prerol'] == 3 ||
-    $_SESSION['usuario']['prerol'] == 2 ||
-    $_SESSION['usuario']['prerol'] == 1){
+    include "permisos.php"){
     include "../model/conexion.php";
 ?>
 <!-- inicio del contenido principal -->
@@ -19,23 +16,56 @@
                         <div class="title">
                             <h3>LISTA ARTICULOS</h3>
                         </div>
+                        <div class="row">
+                        <div class="col-xs-12 col-sm-4 col-md-3 mb-2">
+                            <div class="input-group ">
+                                <span class="input-group-text" id="inputGroup-sizing-default">FECHA INCIAL</span>
+                                <input type="date" class="form-control" id="desde" name="desde" tabindex="2" maxlength="10" size="20">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 mb-2">
+                            <div class="input-group ">
+                                <span class="input-group-text" id="inputGroup-sizing-default">FECHA FINAL</span>
+                                <input type="date" class="form-control" id="hasta" name="hasta" tabindex="2" maxlength="10" size="20">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 mb-2">
+                            <div class="input-group ">
+                                <span class="input-group-text" id="inputGroup-sizing-default">SEDE</span>
+                                <select name="sede" id="sede" class="form-control input-sm" require>
+                                    <option value="">SELECCIONE SEDE</option>
+                                    <option value="0001">METROPOLIS</option>
+                                    <option value="0018">MAYORISTA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-3 mb-2">
+                            <div class="d-grid gap-2">
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <button type="button" class="btn btn-outline-primary" onclick="existencias()">LISTA</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-10">
-                        <input class="form-control me-xl-2" type="search" placeholder="Ingrese Datos para Busqueda" name="FiltrarContenido" id="FiltrarContenido">
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-2">
-                    <div class="input-group">
-                        <label class="input-group-text" for="maxRows">Options</label>
-                        <select class="form-select" name="state" id="maxRows">
-                            <option value="5000" selected>Todas</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="70">70</option>
-                            <option value="100">100</option>
-                        </select>
+                    <div class="row" id="filter">
+                        <div class="col-xs-12 col-sm-12 col-md-10">
+                            <input class="form-control me-xl-2" type="search" placeholder="Ingrese Datos para Busqueda" name="FiltrarContenido" id="FiltrarContenido">
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-2">
+                            <div class="input-group">
+                                <label class="input-group-text" for="maxRows">Options</label>
+                                <select class="form-select" name="state" id="maxRows">
+                                    <option value="0">Todas</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="70">70</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -48,8 +78,8 @@
                                     <tr>
                                         <th scope="col" >REFERENCIA</th>
                                         <th scope="col" >PRODUCTO</th>
-                                        <th scope="col" >BODEGA</th>
                                         <th scope="col" >STOCK</th>
+                                        <th scope="col" >BODEGA</th>
                                         <th scope="col" >ULTCOMPRA</th>
                                         <th scope="col" >ESTADO</th>
                                     </tr>

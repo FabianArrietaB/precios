@@ -30,26 +30,92 @@
             return $data;
         }
 
-        public function stock(){
-            $con = new Conexion();
-            $sql = $con->conectarFomplus()->prepare('SELECT DISTINCT
-                m.INV_REFER REFERENCIA,
-                m.INV_CODIGO CODIGO,
-                m.INV_NOMBRE NOMBRE,
-                m.INV_UNDMED UNDMED,
-                m.INV_VALCOM VALORCOMPRA,
-                m.INV_VALVEN VALORVENTA,
-                m.INV_FECCOM FECCOMPRA,
-                spb.stock STOCK,
-                spb.codigo_bodega CODALM,
-                a.ALM_NOMBRE BODEGA,
-                spb.costo COSTO_STOCK
-            FROM METROCERAMICA.dbo.MAEINV m
-            INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
-            INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
-            WHERE spb.codigo_bodega IN (0001, 0019, 0018) AND spb.desactivado != 1');
-            $sql->execute();
-            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+        public function stock($desde, $hasta, $bodega){
+            if($desde != "" && $hasta != "" && $bodega != ""){
+                $con = new Conexion();
+                $sql = $con->conectarFomplus()->prepare("SELECT DISTINCT
+                    m.INV_REFER REFERENCIA,
+                    m.INV_CODIGO CODIGO,
+                    m.INV_NOMBRE NOMBRE,
+                    m.INV_UNDMED UNDMED,
+                    m.INV_VALCOM VALORCOMPRA,
+                    m.INV_VALVEN VALORVENTA,
+                    m.INV_FECCOM FECCOMPRA,
+                    spb.stock STOCK,
+                    spb.codigo_bodega CODALM,
+                    a.ALM_NOMBRE BODEGA,
+                    spb.costo COSTO_STOCK
+                FROM METROCERAMICA.dbo.MAEINV m
+                INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
+                INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                WHERE spb.desactivado != 1
+                AND CAST(m.INV_FECCOM AS date) BETWEEN CAST('$desde 00:00:00' as datetime) AND CAST('$hasta 00:00:00' as datetime)
+                AND spb.codigo_bodega = '$bodega'");
+                $sql->execute();
+                $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            } else if($desde != "" && $hasta != "" && $bodega == ""){
+                $con = new Conexion();
+                $sql = $con->conectarFomplus()->prepare("SELECT DISTINCT
+                    m.INV_REFER REFERENCIA,
+                    m.INV_CODIGO CODIGO,
+                    m.INV_NOMBRE NOMBRE,
+                    m.INV_UNDMED UNDMED,
+                    m.INV_VALCOM VALORCOMPRA,
+                    m.INV_VALVEN VALORVENTA,
+                    m.INV_FECCOM FECCOMPRA,
+                    spb.stock STOCK,
+                    spb.codigo_bodega CODALM,
+                    a.ALM_NOMBRE BODEGA,
+                    spb.costo COSTO_STOCK
+                FROM METROCERAMICA.dbo.MAEINV m
+                INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
+                INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                WHERE spb.desactivado != 1
+                AND CAST(m.INV_FECCOM AS date) BETWEEN CAST('$desde 00:00:00' as datetime) AND CAST('$hasta 00:00:00' as datetime)");
+                $sql->execute();
+                $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            }else if($desde == "" && $hasta == "" && $bodega != ""){
+                $con = new Conexion();
+                $sql = $con->conectarFomplus()->prepare("SELECT DISTINCT
+                    m.INV_REFER REFERENCIA,
+                    m.INV_CODIGO CODIGO,
+                    m.INV_NOMBRE NOMBRE,
+                    m.INV_UNDMED UNDMED,
+                    m.INV_VALCOM VALORCOMPRA,
+                    m.INV_VALVEN VALORVENTA,
+                    m.INV_FECCOM FECCOMPRA,
+                    spb.stock STOCK,
+                    spb.codigo_bodega CODALM,
+                    a.ALM_NOMBRE BODEGA,
+                    spb.costo COSTO_STOCK
+                FROM METROCERAMICA.dbo.MAEINV m
+                INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
+                INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                WHERE spb.desactivado != 1
+                AND spb.codigo_bodega = '$bodega'");
+                $sql->execute();
+                $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            }else{
+                $con = new Conexion();
+                $sql = $con->conectarFomplus()->prepare("SELECT DISTINCT
+                    m.INV_REFER REFERENCIA,
+                    m.INV_CODIGO CODIGO,
+                    m.INV_NOMBRE NOMBRE,
+                    m.INV_UNDMED UNDMED,
+                    m.INV_VALCOM VALORCOMPRA,
+                    m.INV_VALVEN VALORVENTA,
+                    m.INV_FECCOM FECCOMPRA,
+                    spb.stock STOCK,
+                    spb.codigo_bodega CODALM,
+                    a.ALM_NOMBRE BODEGA,
+                    spb.costo COSTO_STOCK
+                FROM METROCERAMICA.dbo.MAEINV m
+                INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
+                INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                WHERE spb.desactivado != 1");
+                $sql->execute();
+                $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
             return $data;
         }
     }

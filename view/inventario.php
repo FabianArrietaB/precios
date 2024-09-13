@@ -3,10 +3,8 @@
     include "header.php";
     include "navbar.php";
     if(isset($_SESSION['usuario']) &&
-    $_SESSION['usuario']['prerol'] == 4){
+    include "permisos.php"){
     include "../model/conexion.php";
-    $con = new Conexion();
-    $conexion = $con->conectar();
 ?>
 <!-- inicio del contenido principal -->
 <div class="container-fluid">
