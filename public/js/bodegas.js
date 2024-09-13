@@ -257,20 +257,24 @@ function entradas(referencia, producto, desde, hasta, bodega){
         data : {desde : desde, hasta : hasta, bodega : bodega, refere : referencia},
         dataType: 'json',
         success:function(data){
-            let tbl = '';
-            data.forEach((item) => {
-                tbl += `
-                <tr class="bg-white border-b">
-                    <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
-                    <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
-                    <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
-                    <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
-                    <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
-                    <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
-                    <td style="width: 20%" class="text-center"  >${formatterPeso.format(Number(item.VALOR))}</td>
-                </tr>
-                `
-            });
+            if(data.length != 0){
+                let tbl = '';
+                data.forEach((item) => {
+                    tbl += `
+                    <tr class="bg-white border-b">
+                        <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
+                        <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
+                        <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
+                        <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
+                        <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
+                        <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
+                        <td style="width: 20%" class="text-center">${formatterPeso.format(Number(item.VALOR))}</td>
+                    </tr>
+                    `
+                });
+            }else{
+                tbl = `<tr><td colspan="7" class="text-center">NO HAY REGISTROS</td></tr>`
+            }
             document.getElementById('tblmovimientos').innerHTML = tbl
         }
     });
@@ -312,20 +316,24 @@ function salidas(referencia, producto, desde, hasta, bodega){
         data : {desde : desde, hasta : hasta, bodega : bodega, refere : referencia},
         dataType: 'json',
         success:function(data){
-            let tbl = '';
-            data.forEach((item) => {
-                tbl += `
-                <tr class="bg-white border-b">
-                    <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
-                    <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
-                    <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
-                    <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
-                    <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
-                    <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
-                    <td style="width: 20%" class="text-center"  >${formatterPeso.format(Number(item.VALOR))}</td>
-                </tr>
-                `
-            });
+            if(data.length != 0){
+                let tbl = '';
+                data.forEach((item) => {
+                    tbl += `
+                    <tr class="bg-white border-b">
+                        <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
+                        <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
+                        <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
+                        <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
+                        <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
+                        <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
+                        <td style="width: 20%" class="text-center">${formatterPeso.format(Number(item.VALOR))}</td>
+                    </tr>
+                    `
+                });
+            }else{
+                tbl = `<tr><td colspan="7" class="text-center">NO HAY REGISTROS</td></tr>`
+            }
             document.getElementById('tblmovimientos').innerHTML = tbl
         }
     });

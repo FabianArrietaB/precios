@@ -60,21 +60,14 @@
                             <!--		Start Pagination -->
                             <div class='pagination-container' >
                                 <nav aria-label="Page navigation example">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-6">
-                                            <p id="labelpag" class="justify-content-start"></p>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-6">
-                                            <ul class="pagination justify-content-end">
-                                                <li class="page-item" data-page="prev" >
-                                                    <a class="page-link"><<span class="sr-only">(current)</span></a>
-                                                </li>
-                                                <li class="page-item" data-page="next" id="prev">
-                                                    <a class="page-link">><span class="sr-only">(current)</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <ul class="pagination justify-content-end">
+                                        <li class="page-item" data-page="prev" >
+                                            <a class="page-link"><<span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="page-item" data-page="next" id="prev">
+                                            <a class="page-link">><span class="sr-only">(current)</span></a>
+                                        </li>
+                                    </ul>
                                 </nav>
                             </div>
                         </div>
