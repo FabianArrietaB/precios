@@ -262,12 +262,12 @@ function entradas(referencia, producto, desde, hasta, bodega){
                 tbl += `
                 <tr class="bg-white border-b">
                     <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
-                    <td style="width: 10%" class="text-center">${item.MOVIMIENTO}</td>
+                    <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
                     <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
-                    <td style="width: 10%" class="text-center">${item.DOCUMENTO}</td>
+                    <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
                     <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
                     <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
-                    <td class="text-center" style="width: 10%" >${formatterPeso.format(Number(item.VALOR))}</td>
+                    <td style="width: 20%" class="text-center"  >${formatterPeso.format(Number(item.VALOR))}</td>
                 </tr>
                 `
             });
@@ -319,10 +319,10 @@ function salidas(referencia, producto, desde, hasta, bodega){
                     <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
                     <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
                     <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
-                    <td style="width: 20%" class="text-center">${item.DOCUMENTO}</td>
-                    <td style="width: 5%" class="text-center">${Math.round(item.CANTIDAD)}</td>
+                    <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
+                    <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
                     <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
-                    <td style="width: 10%" class="text-center"  >${formatterPeso.format(Number(item.VALOR))}</td>
+                    <td style="width: 20%" class="text-center"  >${formatterPeso.format(Number(item.VALOR))}</td>
                 </tr>
                 `
             });
