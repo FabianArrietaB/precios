@@ -201,12 +201,13 @@ function existencias(){
                             <td style="width: 5%" class="text-center">${++index}</td>
                             <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
                             <td style="width: 25%" class="text-center">${item.NOMBRE}</td>
-                            <td class="text-center" style="width: 10%" >${formatterPeso.format(Number(item.COSTO))}</td>
-                            <td class="text-center" style="width: 10%" >${Math.round(item.IVA * 100)} %</td>
-                            <td class="text-center text-info" style="width: 10%">${Math.round(item.STOCK_INICIAL)}</td>
-                            <td class="text-center text-success" style="width: 10%">${Math.round(item.STOCK_FOMPLUS)}</td>
-                            <td ondblclick="entradas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')" class="text-center text-warning" style="width: 10%">${Math.round(item.ENTRADAS)}</td>
-                            <td ondblclick="salidas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')" class="text-center text-danger" style="width: 10%">${Math.round(item.SALIDAS)}</td>
+                            <td style="width: 10%" class="text-center">${formatterPeso.format(Math.round(item.COSTO))}</td>
+                            <td style="width: 5%" class="text-center">${Math.round(item.IVA * 100)} %</td>
+                            <td style="width: 5%" class="text-center">${item.UNDMED}</td>
+                            <td style="width: 10%" class="text-center text-info">${Math.round(item.STOCK_INICIAL)}</td>
+                            <td style="width: 10%" class="text-center text-success">${Math.round(item.STOCK_FOMPLUS)}</td>
+                            <td style="width: 10%" class="text-center text-warning" ondblclick="entradas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')">${Math.round(item.ENTRADAS)}</td>
+                            <td style="width: 10%" class="text-center text-danger" ondblclick="salidas('${item.REFERENCIA}', '${producto}', '${desde}', '${hasta}', '${bodega}')">${Math.round(item.SALIDAS)}</td>
                         </tr>
                     `
                 });
@@ -237,6 +238,7 @@ function entradas(referencia, producto, desde, hasta, bodega){
                                     <th scope="col" >MOVIMIENTO</th>
                                     <th scope="col" >PREFIJO</th>
                                     <th scope="col" >DOCUMENTO</th>
+                                    <th scope="col" >UND MEDIDA</th>
                                     <th scope="col" >CANTIDAD</th>
                                     <th scope="col" >VALOR UND</th>
                                     <th scope="col" >VALOR TOTAL</th>
@@ -257,21 +259,36 @@ function entradas(referencia, producto, desde, hasta, bodega){
         data : {desde : desde, hasta : hasta, bodega : bodega, refere : referencia},
         dataType: 'json',
         success:function(data){
+            let tbl = '';
+            let totalvalor = 0;
+            let totalcant = 0;
+            let total = 0;
             if(data.length != 0){
-                let tbl = '';
                 data.forEach((item) => {
+                    totalvalor += Number(item.VALOR);
+                    total +=  Number(item.VALOR / item.CANTIDAD);
+                    totalcant += Number(item.CANTIDAD);
                     tbl += `
                     <tr class="bg-white border-b">
                         <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
                         <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
                         <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
                         <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
+                        <td style="width: 15%" class="text-center">${item.UNDMEDIDA}</td>
                         <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
-                        <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
-                        <td style="width: 20%" class="text-center">${formatterPeso.format(Number(item.VALOR))}</td>
+                        <td style="width: 10%" class="text-center">${formatterPeso.format(Math.round(item.VALOR / item.CANTIDAD))}</td>
+                        <td style="width: 20%" class="text-center">${formatterPeso.format(Math.round(item.VALOR))}</td>
                     </tr>
                     `
                 });
+                tbl += `
+                <tr class="table-secondary">
+                    <th colspan="5">TOTAL</th>
+                    <td class="text-center ${(totalcant < 0) ? 'text-danger':''}">${ Math.round(totalcant)}</td>
+                    <td class="text-center ${(total < 0) ? 'text-danger':''}">${ formatterPeso.format(Math.round(total))}</td>
+                    <td class="text-center ${(totalvalor < 0) ? 'text-danger':''}">${ formatterPeso.format(Math.round(totalvalor))}</td>
+                </tr>
+            `
             }else{
                 tbl = `<tr><td colspan="7" class="text-center">NO HAY REGISTROS</td></tr>`
             }
@@ -296,6 +313,7 @@ function salidas(referencia, producto, desde, hasta, bodega){
                                     <th scope="col" >MOVIMIENTO</th>
                                     <th scope="col" >PREFIJO</th>
                                     <th scope="col" >DOCUMENTO</th>
+                                    <th scope="col" >UND MEDIDA</th>
                                     <th scope="col" >CANTIDAD</th>
                                     <th scope="col" >VALOR UND</th>
                                     <th scope="col" >VALOR TOTAL</th>
@@ -316,21 +334,36 @@ function salidas(referencia, producto, desde, hasta, bodega){
         data : {desde : desde, hasta : hasta, bodega : bodega, refere : referencia},
         dataType: 'json',
         success:function(data){
+            let tbl = '';
+            let totalvalor = 0;
+            let totalcant = 0;
+            let total = 0;
             if(data.length != 0){
-                let tbl = '';
                 data.forEach((item) => {
+                    totalvalor += Number(item.VALOR);
+                    total +=  Number(item.VALOR / item.CANTIDAD);
+                    totalcant += Number(item.CANTIDAD);
                     tbl += `
                     <tr class="bg-white border-b">
                         <td style="width: 15%" class="text-center">${formatDate(item.FECHA)}</td>
                         <td style="width: 20%" class="text-center">${item.MOVIMIENTO}</td>
                         <td style="width: 10%" class="text-center">${item.PREFIJO}</td>
                         <td style="width: 15%" class="text-center">${item.DOCUMENTO}</td>
+                        <td style="width: 15%" class="text-center">${item.UNDMEDIDA}</td>
                         <td style="width: 10%" class="text-center">${Math.round(item.CANTIDAD)}</td>
                         <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR / item.CANTIDAD))}</td>
                         <td style="width: 20%" class="text-center">${formatterPeso.format(Number(item.VALOR))}</td>
                     </tr>
                     `
                 });
+                tbl += `
+                <tr class="table-secondary">
+                    <th colspan="5">TOTAL</th>
+                    <td class="text-center ${(totalcant < 0) ? 'text-danger':''}">${ Math.round(totalcant)}</td>
+                    <td class="text-center ${(total < 0) ? 'text-danger':''}">${ formatterPeso.format(Number(total))}</td>
+                    <td class="text-center ${(totalvalor < 0) ? 'text-danger':''}">${ formatterPeso.format(Number(totalvalor))}</td>
+                </tr>
+            `
             }else{
                 tbl = `<tr><td colspan="7" class="text-center">NO HAY REGISTROS</td></tr>`
             }

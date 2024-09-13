@@ -10,6 +10,7 @@
                 spb.nombre NOMBRE,
                 spb.costo COSTO,
                 spb.porcentaje_iva IVA,
+                spb.unidad_medida UNDMED,
                 (vspb.stock + mi.SALIDAS) STOCK_INICIAL,
                 spb.stock STOCK_FOMPLUS,
                 mi.ENTRADAS ENTRADAS,
@@ -25,7 +26,7 @@
                         GROUP BY MOV_REFER
                         ) mi ON vspb.referencia = mi.REFERENCIA
             WHERE spb.codigo_bodega = {$bodega} AND vspb.codigo_bodega = {$bodega}
-            GROUP BY spb.referencia,spb.nombre,spb.costo,spb.porcentaje_iva,spb.stock, vspb.stock, mi.ENTRADAS, mi.SALIDAS
+            GROUP BY spb.referencia,spb.nombre,spb.costo,spb.porcentaje_iva,spb.unidad_medida, spb.stock, vspb.stock, mi.ENTRADAS, mi.SALIDAS
             ORDER BY spb.referencia ASC");
             $sql->execute();
             $data = $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -40,6 +41,7 @@
                 t.TIP_NOMBRE MOVIMIENTO,
                 m.MOV_PREFIJ PREFIJO,
                 m.MOV_NUMDOC DOCUMENTO,
+                m.MOV_UNDMED UNDMEDIDA,
                 m.MOV_CANTID CANTIDAD,
                 m.MOV_VALOR  VALOR
             FROM METROCERAMICA.dbo.MOVINV2024 m
@@ -62,6 +64,7 @@
                 t.TIP_NOMBRE MOVIMIENTO,
                 m.MOV_PREFIJ PREFIJO,
                 m.MOV_NUMDOC DOCUMENTO,
+                m.MOV_UNDMED UNDMEDIDA,
                 m.MOV_CANTID CANTIDAD,
                 m.MOV_VALOR  VALOR
             FROM METROCERAMICA.dbo.MOVINV2024 m

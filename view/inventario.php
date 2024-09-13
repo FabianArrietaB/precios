@@ -79,6 +79,7 @@
                                     <th scope="col" >PRODUCTO</th>
                                     <th scope="col" >COSTO</th>
                                     <th scope="col" >IVA</th>
+                                    <th scope="col" >UND MEDIDA</th>
                                     <th scope="col" >STOCK INICIAL</th>
                                     <th scope="col" >STOCK FOMPLUS</th>
                                     <th scope="col" >ENTRADAS</th>
