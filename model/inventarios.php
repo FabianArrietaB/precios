@@ -118,5 +118,46 @@
             }
             return $data;
         }
+
+        public function apolo(){
+            $con = new Conexion();
+            $sql = $con->conectarBD()->prepare('SELECT 
+                ap.id,
+                ap.codigo CODIGO,
+                ap.nombre NOMBRE,
+                ap.referencia_fomplus FOMPLUS,
+                m.INV_NOMBRE NOMFOMPLUS,
+                ap.referencia_triunfo TRIUNFO,
+                ap.referencia_world WORLD,
+                ap.stock STOCK,
+                ap.costo COSTO,
+                ap.iva IVA,
+                ap.undmed UNDMED
+            FROM METROPOLIS_EXT.dbo.[apolo_invtriunfo] ap
+            INNER JOIN METROCERAMICA.dbo.MAEINV m ON ap.referencia_fomplus = m.INV_REFER');
+            $sql->execute();
+            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
+        }
+
+        public function apolo2(){
+            $con = new Conexion();
+            $sql = $con->conectarBD()->prepare('SELECT 
+                ap.id,
+                ap.codigo CODIGO,
+                ap.nombre NOMBRE,
+                ap.referencia_fomplus FOMPLUS,
+                ap.referencia_triunfo TRIUNFO,
+                ap.referencia_world WORLD,
+                ap.stock STOCK,
+                ap.costo COSTO,
+                ap.iva IVA,
+                ap.undmed UNDMED
+            FROM METROPOLIS_EXT.dbo.[apolo_invtriunfo] ap
+            WHERE ap.referencia_fomplus IS NULL');
+            $sql->execute();
+            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
+        }
     }
 ?>

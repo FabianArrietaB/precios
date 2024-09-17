@@ -17,6 +17,16 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="proveedores.php">PROVEEDORES</a>
                     </li>
+                <?php } else if ($_SESSION['usuario']['prerol'] == 2) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="inicio.php">INICIO</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="stock.php">EXISTENCIAS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="inventario.php">BODEGA</a>
+                    </li>
                 <?php } else if ($_SESSION['usuario']['prerol'] == 3) { ?>
                     <li class="nav-item">
                         <a class="nav-link active" href="inicio.php">INICIO</a>
@@ -26,6 +36,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="precios.php">PRECIOS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="apolo.php">APOLO</a>
                     </li>
                 <?php } else if ($_SESSION['usuario']['prerol'] == 4) { ?>
                     <li class="nav-item">
@@ -42,6 +55,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="proveedores.php">PROVEEDORES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="apolo.php">APOLO</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="historial.php">HISTORIAL</a>
