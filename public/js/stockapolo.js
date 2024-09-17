@@ -1,6 +1,7 @@
 $(document).ready(function(){
     getPagination('#productos');
     tblapolo();
+    tblapolo2();
 });
 
 const formatterPeso = new Intl.NumberFormat('es-CO', {
@@ -179,15 +180,6 @@ function tblapolo(){
         url : "../controller/inventarios/apolo.php",
         type : 'GET',
         dataType: 'json',
-        beforeSend: function() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Cargando Informacion',
-                showConfirmButton: false,
-                timer: 8000
-            });
-            document.getElementById('tblstockapolo').innerHTML = '';
-        },
         success: function (data) {
             //console.log(data);
             let tbl = '';
@@ -222,23 +214,14 @@ function tblapolo2(){
         url : "../controller/inventarios/apolo2.php",
         type : 'GET',
         dataType: 'json',
-        beforeSend: function() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Cargando Informacion',
-                showConfirmButton: false,
-                timer: 8000
-            });
-            document.getElementById('tblstockapolo').innerHTML = '';
-        },
         success: function (data) {
             //console.log(data);
             let tbl = '';
             data.forEach((item, index) => {
-                if(item.NOMBRE == item.NOMFOMPLUS){
-                    clase = 'text-success'
+                if(item.FOMPLUS == null){
+                    referencia = 'No Asignada';
                 }else{
-                    clase = 'text-danger'
+                    referencia = item.FOMPLUS;
                 }
                 if(item === ""){
                     tbl += '<tr><td colspan="4">No hay datos</td></tr>';
@@ -246,16 +229,15 @@ function tblapolo2(){
                     tbl += `
                     <tr>
                             <td style="width: 5%" class="text-center">${++index}</td>
-                            <td style="width: 15%" class="text-center">${item.FOMPLUS}</td>
-                            <td style="width: 35%" class="text-center ${clase} ">${item.NOMFOMPLUS}</td>
-                            <td style="width: 10%" class="text-center">${item.CODIGO}</td>
-                            <td style="width: 35%" class="text-center ${clase} ">${item.NOMBRE}</td>
+                            <td style="width: 15%" class="text-center">${item.CODIGO}</td>
+                            <td style="width: 35%" class="text-center">${item.NOMBRE}</td>
                             <td style="width: 10%" class="text-center text-info">${round(item.STOCK, 2)}</td>
+                            <td style="width: 35%" class="text-center">${referencia}</td>
                     </tr>
                 `
                 }
             });
-            document.getElementById('tblstockapolo').innerHTML = tbl
+            document.getElementById('tblsinreferencia').innerHTML = tbl
         }
     });
 }

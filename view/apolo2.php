@@ -46,14 +46,13 @@
                             <table class="table table-sm table-striped font-small" id="productos">
                                 <thead>
                                     <tr>
-                                        <th scope="col" >REFERENCIA FOMPLUS</th>
-                                        <th scope="col" >NOMBRE FOMPLUS</th>
                                         <th scope="col" >REFERENCIA APOLO</th>
                                         <th scope="col" >NOMBRE APOLO</th>
                                         <th scope="col" >STOCK APOLO</th>
+                                        <th scope="col" >REFERENCIA FOMPLUS</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tblstockapolo" class="BusquedaRapida">
+                                <tbody id="tblsinreferencia" class="BusquedaRapida">
                                 </tbody>
                             </table>
                             <!--		Start Pagination -->
