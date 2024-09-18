@@ -4,6 +4,9 @@ $(document).ready(function(){
     tblapolo2();
 });
 
+let modal = $('#modalupdate');
+
+
 const formatterPeso = new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
@@ -175,6 +178,45 @@ $(function() {
     });
 });
 
+function importarproductos() {
+    var excel = $("#productos").val();
+    if(excel === ""){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No se ha seleccionado un archivo',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
+    $.ajax({
+        url : "../controller/inventarios/importar.php",
+        method:     "POST",
+        data: new FormData($('#form_file')[0]),
+        contentType: false,
+        cache: false,
+        processData: false,
+        beforeSend: function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Cargando Datos',
+                showConfirmButton: false,
+                timer: 8000
+            });
+        },
+        success: function (resp){
+            Swal.fire({
+                icon: 'success',
+                title: 'Datos Cargados',
+                text: 'Se cargaron ' + resp.productos + " Productos",
+                showConfirmButton: false,
+                timer: 5000
+            });
+        }
+    });
+    return false;
+}
+
 function tblapolo(){
     $.ajax({
         url : "../controller/inventarios/apolo.php",
@@ -226,8 +268,9 @@ function tblapolo2(){
                 if(item === ""){
                     tbl += '<tr><td colspan="4">No hay datos</td></tr>';
                 }else{
+                    producto = (item.NOMBRE.replace("\"", ""))
                     tbl += `
-                    <tr>
+                    <tr ondblclick="detalle('${item.CODIGO}', '${producto}')">
                             <td style="width: 5%" class="text-center">${++index}</td>
                             <td style="width: 15%" class="text-center">${item.CODIGO}</td>
                             <td style="width: 35%" class="text-center">${item.NOMBRE}</td>
@@ -242,40 +285,66 @@ function tblapolo2(){
     });
 }
 
-function importarproductos() {
-    var excel = $("#productos").val();
-    if(excel === ""){
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'No se ha seleccionado un archivo',
-            showConfirmButton: false,
-            timer: 2000
-        });
-    }
+function detalle(codigo, producto){
+    var title = `
+        <h5 class="modal-title" role="title" id="exampleModalLabel">Agregar Referencia a ${producto}</h5>
+    `
+    var bodi = `
+            <div class="row item-center">
+                <div class="col-12">
+                    <div class="input-group input-group-sm  mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default"><strong>CODIGO APOLO</strong></span>
+                        <input id="codigo" name="codigo" readonly value="${codigo}" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm  mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default"><strong>PRODUCTO</strong></span>
+                        <input id="nombre" name="nombre" value="${producto}" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm  mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default"><strong>REFERENCIA FOMPLUS</strong></span>
+                        <input id="referencia" name="referencia" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success" data-bs-dismiss="modal">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+            `
+    document.getElementById(`title`).innerHTML = title
+    document.getElementById(`body`).innerHTML = bodi
+    modal.modal('show')
+}
+
+function update(){
     $.ajax({
-        url : "../controller/inventarios/importar.php",
-        method:     "POST",
-        data: new FormData($('#form_file')[0]),
-        contentType: false,
-        cache: false,
-        processData: false,
-        beforeSend: function() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Cargando Datos',
-                showConfirmButton: false,
-                timer: 8000
-            });
-        },
-        success: function (resp){
-            Swal.fire({
-                icon: 'success',
-                title: 'Datos Cargados',
-                text: 'Se cargaron ' + resp.productos + " Productos",
-                showConfirmButton: false,
-                timer: 5000
-            });
+        type: "POST",
+        data: $('#frmupdate').serialize(),
+        url: "../controller/inventarios/addreferencia.php",
+        success:function(respuesta){
+            respuesta = respuesta.trim();
+            console.log(respuesta)
+            if(respuesta > 0){
+                swal.fire({
+                    icon: 'success',
+                    title: 'Producto Actualizado Exitosamente',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }else{
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Error al Actualizar!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
         }
     });
     return false;

@@ -43,9 +43,14 @@ class Conexion{
    }
 
    public function conectarapolo(){
-      $servidor = "auth-db486.hstgr.io";
-      $usuario = "u914867005_apolo";
-      $password = "Apolo2023";
+      // $servidor = "auth-db486.hstgr.io";
+      // $usuario = "u914867005_apolo";
+      // $password = "Apolo2023";
+
+      $servidor = "localhost";
+      $usuario = "root";
+      $password = "";
+
       $db = "u914867005_apolo";
       $conexion = mysqli_connect($servidor, $usuario, $password, $db);
       return $conexion;

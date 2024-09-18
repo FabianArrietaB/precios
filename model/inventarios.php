@@ -159,5 +159,37 @@
             $data = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $data;
         }
+
+        public function addreferencia($datos){
+            $conexion = Conexion::conectarapolo();
+            $sql = "UPDATE articulos SET referencia_externa = ? WHERE id = ?";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bind_param('si', $datos['referencia'], $datos['codigo']);
+            $respuesta = $stmt->execute();
+            $stmt->close();
+            // $consulta = "SELECT id, nombre, nombre_adicional FROM articulos WHERE id =  '".$datos['codigo']."'";
+            // $respuesta = mysqli_query($conexion, $consulta);
+            // $producto = mysqli_fetch_array($respuesta);
+            // // if($producto['nombre'] == $datos['producto']){
+            //     $conexion = Conexion::conectarapolo();
+            //     
+            //     $stmt = $conexion->prepare($sql);
+            //     $stmt->bind_param("si", $datos['referencia'], $datos['codigo']);
+            //     $stmt->execute();
+            //     $stmt->close();
+            //     $conexion->close();
+            //     return true;
+            // }else{
+            //     $conexion = Conexion::conectarapolo();
+            //     $sql = "UPDATE articulos SET nombre, referencia_externa = ? WHERE id = ?";
+            //     $stmt = $conexion->prepare($sql);
+            //     $stmt->bind_param("ssi", $datos['producto'], $datos['referencia'], $datos['codigo']);
+            //     $stmt->execute();
+            //     $stmt->close();
+            //     $conexion->close();
+            //     return true;
+            // }
+            return $respuesta;
+        }
     }
 ?>
