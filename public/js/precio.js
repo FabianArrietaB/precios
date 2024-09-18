@@ -209,7 +209,6 @@ function updateprecio(){
             console.log(respuesta)
             addhistorial()
         }
-        
     });
     return false;
 }

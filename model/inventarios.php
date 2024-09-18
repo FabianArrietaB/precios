@@ -160,35 +160,23 @@
             return $data;
         }
 
-        public function addreferencia($datos){
-            $conexion = Conexion::conectarapolo();
+        public function addreferencia($codigo, $producto, $referencia){
+            $con = new Conexion();
+            $sql = $con->conectarBD()->prepare('UPDATE METROPOLIS_EXT.dbo.[apolo_invtriunfo] SET referencia_fomplus = ? WHERE codigo = ?');
+            $sql->execute(array($referencia, $codigo));
+            if($sql != null){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+
+        public function addapolo($datos){
+            $con = Conexion::conectarapolo();
             $sql = "UPDATE articulos SET referencia_externa = ? WHERE id = ?";
-            $stmt = $conexion->prepare($sql);
-            $stmt->bind_param('si', $datos['referencia'], $datos['codigo']);
-            $respuesta = $stmt->execute();
-            $stmt->close();
-            // $consulta = "SELECT id, nombre, nombre_adicional FROM articulos WHERE id =  '".$datos['codigo']."'";
-            // $respuesta = mysqli_query($conexion, $consulta);
-            // $producto = mysqli_fetch_array($respuesta);
-            // // if($producto['nombre'] == $datos['producto']){
-            //     $conexion = Conexion::conectarapolo();
-            //     
-            //     $stmt = $conexion->prepare($sql);
-            //     $stmt->bind_param("si", $datos['referencia'], $datos['codigo']);
-            //     $stmt->execute();
-            //     $stmt->close();
-            //     $conexion->close();
-            //     return true;
-            // }else{
-            //     $conexion = Conexion::conectarapolo();
-            //     $sql = "UPDATE articulos SET nombre, referencia_externa = ? WHERE id = ?";
-            //     $stmt = $conexion->prepare($sql);
-            //     $stmt->bind_param("ssi", $datos['producto'], $datos['referencia'], $datos['codigo']);
-            //     $stmt->execute();
-            //     $stmt->close();
-            //     $conexion->close();
-            //     return true;
-            // }
+            $query = $con->prepare($sql);
+            $query->bind_param('si', $datos['referencia'], $datos['codigo']);
+            $respuesta = $query->execute();
             return $respuesta;
         }
     }

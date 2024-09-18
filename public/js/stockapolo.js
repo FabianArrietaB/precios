@@ -330,12 +330,37 @@ function update(){
             respuesta = respuesta.trim();
             console.log(respuesta)
             if(respuesta > 0){
+                addapolo();
+            }else{
                 swal.fire({
-                    icon: 'success',
-                    title: 'Producto Actualizado Exitosamente',
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Error al Actualizar!',
                     showConfirmButton: false,
                     timer: 1500
                 });
+            }
+        }
+    });
+    return false;
+}
+
+function addapolo(){
+    $.ajax({
+        type: "POST",
+        data: $('#frmupdate').serialize(),
+        url: "../controller/inventarios/addapolo.php",
+        success:function(respuesta){
+            respuesta = respuesta.trim();
+            console.log(respuesta)
+            if(respuesta > 0){
+                swal.fire({
+                    icon: 'success',
+                    title: 'Referencia Aagregada Exitosamente',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                tblapolo2();
             }else{
                 swal.fire({
                     icon: 'error',
