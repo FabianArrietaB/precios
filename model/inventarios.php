@@ -160,7 +160,7 @@
             return $data;
         }
 
-        public function addreferencia($codigo, $producto, $referencia){
+        public function addreferencia($codigo, $referencia){
             $con = new Conexion();
             $sql = $con->conectarBD()->prepare('UPDATE METROPOLIS_EXT.dbo.[apolo_invtriunfo] SET referencia_fomplus = ? WHERE codigo = ?');
             $sql->execute(array($referencia, $codigo));
@@ -178,6 +178,34 @@
             $query->bind_param('si', $datos['referencia'], $datos['codigo']);
             $respuesta = $query->execute();
             return $respuesta;
+        }
+
+        public function consulta($referencia){
+            $con = new Conexion();
+            $sql = $con->conectarFomplus()->prepare("SELECT INV_NOMBRE FROM MAEINV WHERE INV_REFER = ?");
+            $sql->execute(array($referencia));
+            $data = $sql->fetch(PDO::FETCH_ASSOC);
+            return $data['INV_NOMBRE'];
+        }
+
+        public function rename($datos){
+            $con = Conexion::conectarapolo();
+            $sql = "UPDATE articulos SET nombre = ? WHERE referencia_externa = ?";
+            $query = $con->prepare($sql);
+            $query->bind_param('ss', $datos['nombre'], $datos['referencia']);
+            $respuesta = $query->execute();
+            return $respuesta;
+        }
+
+        public function rename2($nombre, $referencia){
+            $con = new Conexion();
+            $sql = $con->conectarBD()->prepare('UPDATE METROPOLIS_EXT.dbo.[apolo_invtriunfo] SET nombre = ? WHERE referencia_fomplus = ?');
+            $sql->execute(array($nombre, $referencia));
+            if($sql != null){
+                return 1;
+            }else{
+                return 0;
+            }
         }
     }
 ?>

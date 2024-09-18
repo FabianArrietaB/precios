@@ -235,7 +235,7 @@ function tblapolo(){
                     tbl += '<tr><td colspan="4">No hay datos</td></tr>';
                 }else{
                     tbl += `
-                    <tr>
+                    <tr ondblclick="consulta('${item.FOMPLUS}')">
                             <td style="width: 5%" class="text-center">${++index}</td>
                             <td style="width: 15%" class="text-center">${item.FOMPLUS}</td>
                             <td style="width: 35%" class="text-center ${clase} ">${item.NOMFOMPLUS}</td>
@@ -373,4 +373,59 @@ function addapolo(){
         }
     });
     return false;
+}
+
+function consulta(referencia){
+    $.ajax({
+        type:"GET",
+        data:  {"referencia": referencia},
+        url: "../controller/inventarios/consulta.php",
+        success:function(respuesta){
+            respuesta = respuesta.trim();
+            console.log(respuesta, referencia)
+            rename(respuesta, referencia);
+            rename2(respuesta, referencia);
+        }
+    });
+}
+
+function rename(nombre, referencia){
+    $.ajax({
+        type:"POST",
+        data:  {"nombre": nombre, "referencia": referencia},
+        url: "../controller/inventarios/rename.php",
+        success:function(respuesta){
+            respuesta = respuesta.trim();
+            if(respuesta == 1){
+                console.log(respuesta)
+                tblapolo();
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se pudo realizar la operacion!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        }
+    });
+}
+
+function rename2(nombre, referencia){
+    $.ajax({
+        type:"POST",
+        data:  {"nombre": nombre, "referencia": referencia},
+        url: "../controller/inventarios/rename2.php",
+        success:function(respuesta){
+            respuesta = respuesta.trim();
+            console.log(respuesta)
+            Swal.fire({
+                icon: 'success',
+                title: 'Operacion Exitosa',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+    });
 }
