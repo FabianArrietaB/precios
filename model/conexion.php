@@ -51,7 +51,7 @@ class Conexion{
       $usuario = "root";
       $password = "";
 
-      $db = "apolo";
+      $db = "u914867005_apolo";
       $conexion = mysqli_connect($servidor, $usuario, $password, $db);
       return $conexion;
    }
