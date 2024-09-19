@@ -142,7 +142,7 @@
 
         public function apolo2(){
             $con = new Conexion();
-            $sql = $con->conectarBD()->prepare('SELECT 
+            $sql = $con->conectarBD()->prepare("SELECT 
                 ap.id,
                 ap.codigo CODIGO,
                 ap.nombre NOMBRE,
@@ -154,7 +154,7 @@
                 ap.iva IVA,
                 ap.undmed UNDMED
             FROM METROPOLIS_EXT.dbo.[apolo_invtriunfo] ap
-            WHERE ap.referencia_fomplus IS NULL');
+            WHERE ap.stock > '0' AND ap.referencia_fomplus IS NULL");
             $sql->execute();
             $data = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $data;
