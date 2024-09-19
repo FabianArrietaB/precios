@@ -44,10 +44,24 @@
                     spb.stock STOCK,
                     spb.codigo_bodega CODALM,
                     a.ALM_NOMBRE BODEGA,
-                    spb.costo COSTO_STOCK
+                    spb.costo COSTO_STOCK,
+                    mi.PREFIJO PREFIJO,
+                    mi.DOCUME NUMERO,
+                    mi.FECHA FECHAORD
                 FROM METROCERAMICA.dbo.MAEINV m
                 INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
                 INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                LEFT JOIN (SELECT 
+                            MOV_REFER  REFERENCIA,
+                            MOV_PREFIJ PREFIJO,
+                            MOV_NUMDOC DOCUME,
+                            MOV_FECHA FECHA
+                            FROM METROCERAMICA.dbo.MOVINV2024
+                            WHERE CAST(MOV_FECHA AS date) BETWEEN CAST('$desde 00:00:00' as datetime) AND CAST('$hasta 00:00:00' as datetime)
+                            AND MOV_BODEGA = '$bodega'
+                            AND MOV_TIPMOV = '01'
+                            GROUP BY MOV_REFER, MOV_PREFIJ, MOV_NUMDOC, MOV_FECHA
+                            ) mi ON m.INV_REFER = mi.REFERENCIA 
                 WHERE spb.desactivado != 1
                 AND CAST(m.INV_FECCOM AS date) BETWEEN CAST('$desde 00:00:00' as datetime) AND CAST('$hasta 00:00:00' as datetime)
                 AND spb.codigo_bodega = '$bodega'");

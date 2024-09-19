@@ -78,10 +78,11 @@
                                     <tr>
                                         <th scope="col" >REFERENCIA</th>
                                         <th scope="col" >PRODUCTO</th>
-                                        <th scope="col" >STOCK</th>
-                                        <th scope="col" >BODEGA</th>
+                                        <th scope="col" >BODEGA / STOCK</th>
                                         <th scope="col" >ULTCOMPRA</th>
                                         <th scope="col" >ESTADO</th>
+                                        <th scope="col" >ORD.COMPRA</th>
+                                        <th scope="col" >FECHA.ORDCOMPRA</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tblstock" class="BusquedaRapida">

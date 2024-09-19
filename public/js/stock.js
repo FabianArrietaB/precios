@@ -212,26 +212,34 @@ function existencias(){
                     producto = (item.NOMBRE.replace("\"", ""))
                     if(item.STOCK <= 5 && item.STOCK >= 1){
                         estado = 'QUEDAN MENOS DE 5 UND'
-                        clase = 'text-warning'
+                        clasestock = 'text-warning'
                     }else if(item.STOCK >= 6 && item.STOCK <=10){
                         estado = 'QUEDAN MENOS DE 10 UND'
-                        clase = 'text-info'
+                        clasestock = 'text-info'
                     }else if(item.STOCK >= 11){
                         estado = 'CON EXISTENCIAS'
-                        clase = 'text-success'
+                        clasestock = 'text-success'
                     }else{
                         estado = 'SIN STOCK'
+                        clasestock = 'text-danger'
+                    }
+                    if(item.PREFIJO == null && item.NUMERO == null){
+                        orden = 'SIN ORDEN'
                         clase = 'text-danger'
+                    }else{
+                        orden =  item.PREFIJO + ' ' + item.NUMERO
+                        clase = 'text-primary'
                     }
                     tbl += `
                         <tr">
-                            <td style="width: 5%" class="text-center">${++index}</td>
-                            <td style="width: 15%" class="text-center">${item.REFERENCIA}</td>
+                            <td style="width: 2%" class="text-center">${++index}</td>
+                            <td style="width: 10%" class="text-center">${item.REFERENCIA}</td>
                             <td style="width: 25%" class="text-center">${item.NOMBRE}</td>
-                            <td style="width: 10%" class="text-center text-info">${round(item.STOCK, 2)}</td>
-                            <td style="width: 15%" class="text-center">${item.BODEGA}</td>
+                            <td style="width: 15%" class="text-center">${item.BODEGA} / ${round(item.STOCK, 2)}</td>
                             <td class="text-center" style="width: 15%" >${formatDate(item.FECCOMPRA)}</td>
-                            <td class="text-center ${clase} " style="width: 15%" >${estado}</td>
+                            <td class="text-center ${clasestock} " style="width: 15%" >${estado}</td>
+                            <td class="text-center ${clase} " style="width: 15%" >${orden}</td>
+                            <td class="text-center " style="width: 15%" >${formatDate(item.FECHAORD)}</td>
                         </tr>
                     `
                 });
