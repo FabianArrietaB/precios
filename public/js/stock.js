@@ -296,7 +296,7 @@ function detalleorden(prefijo, numero, fecha){
             `
             var bodi = `
                 <div class="row item-center">
-                    <h6 class="item-left">Infomacion Proveedor</h6>
+                    <h6 align="left"><strong>INFORMACION PROVEEDOR</strong></h6>
                     <div class="col-md-4">
                         <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
@@ -316,14 +316,14 @@ function detalleorden(prefijo, numero, fecha){
                     <div class="col-md-4">
                         <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-default">PEDIDO</span>
+                                <span class="input-group-text" id="inputGroup-sizing-default">ENTRADA</span>
                             </div>
                             <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${item.DOCAFEC}">
                         </div>
                     </div>
                 </div>
                 <div class="row item-center">
-                    <h6 class="item-left">Infomacion Factura</h6>
+                    <h6 align="left"><strong>INFORMACION DOCUMENTO</strong></h6>
                     <div class="col-md-3">
                         <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
