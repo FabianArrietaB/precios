@@ -80,10 +80,23 @@
                     spb.stock STOCK,
                     spb.codigo_bodega CODALM,
                     a.ALM_NOMBRE BODEGA,
-                    spb.costo COSTO_STOCK
+                    spb.costo COSTO_STOCK,
+                    mi.PREFIJO PREFIJO,
+                    mi.DOCUME NUMERO,
+                    mi.FECHA FECHAORD
                 FROM METROCERAMICA.dbo.MAEINV m
                 INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
                 INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                LEFT JOIN (SELECT 
+                            MOV_REFER  REFERENCIA,
+                            MOV_PREFIJ PREFIJO,
+                            MOV_NUMDOC DOCUME,
+                            MOV_FECHA FECHA
+                            FROM METROCERAMICA.dbo.MOVINV2024
+                            WHERE CAST(MOV_FECHA AS date) BETWEEN CAST('$desde 00:00:00' as datetime) AND CAST('$hasta 00:00:00' as datetime)
+                            AND MOV_TIPMOV = '01'
+                            GROUP BY MOV_REFER, MOV_PREFIJ, MOV_NUMDOC, MOV_FECHA
+                            ) mi ON m.INV_REFER = mi.REFERENCIA 
                 WHERE spb.desactivado != 1
                 AND CAST(m.INV_FECCOM AS date) BETWEEN CAST('$desde 00:00:00' as datetime) AND CAST('$hasta 00:00:00' as datetime)");
                 $sql->execute();
@@ -101,10 +114,23 @@
                     spb.stock STOCK,
                     spb.codigo_bodega CODALM,
                     a.ALM_NOMBRE BODEGA,
-                    spb.costo COSTO_STOCK
+                    spb.costo COSTO_STOCK,
+                    mi.PREFIJO PREFIJO,
+                    mi.DOCUME NUMERO,
+                    mi.FECHA FECHAORD
                 FROM METROCERAMICA.dbo.MAEINV m
                 INNER JOIN METROPOLIS_EXT.dbo.[_stock_por_bodegas] spb ON m.INV_REFER = spb.referencia
                 INNER JOIN METROCERAMICA.dbo.MAEALM a ON spb.codigo_bodega = a.ALM_CODIGO
+                LEFT JOIN (SELECT 
+                            MOV_REFER  REFERENCIA,
+                            MOV_PREFIJ PREFIJO,
+                            MOV_NUMDOC DOCUME,
+                            MOV_FECHA FECHA
+                            FROM METROCERAMICA.dbo.MOVINV2024
+                            AND MOV_BODEGA = '$bodega'
+                            AND MOV_TIPMOV = '01'
+                            GROUP BY MOV_REFER, MOV_PREFIJ, MOV_NUMDOC, MOV_FECHA
+                            ) mi ON m.INV_REFER = mi.REFERENCIA 
                 WHERE spb.desactivado != 1
                 AND spb.codigo_bodega = '$bodega'");
                 $sql->execute();
@@ -224,7 +250,7 @@
 
         public function orden($prefijo, $numero){
             $con = new Conexion();
-            $sql = $con->conectarFomplus()->prepare('SELECT 
+            $sql = $con->conectarFomplus()->prepare("SELECT
             mi.MOV_REFER REFERENCIA,
             p.INV_NOMBRE PRODUCTO,
             mi.MOV_FECHA FECHADOC,
@@ -235,25 +261,27 @@
             mi.MOV_DOCAFE DOCAFEC,
             mr.DIAS DIAS,
             mr.OBSER OBSERV,
-            mr.VALOR VALOR,
+            ROUND(mi.MOV_VALOR / mi.MOV_CANTID, 0) VALOR,
+            ROUND(mi.MOV_VALOR,0) TOTAL,
+            mr.VALOR TOTALDOC,
             mi.MOV_CODOPE OPERAD
-            FROM MOVINV2024 mi
-            INNER JOIN MAEINV p ON mi.MOV_REFER = p.INV_REFER
-            INNER JOIN MAECXP cp ON mi.MOV_CEDULA = cp.CLI_CEDULA
-            INNER JOIN (
-                        SELECT 
-                        mr.REM_PREFIJ PREFIJO,
-                        mr.REM_NUMREM NUMDOC,
-                        mr.REM_PLAZO DIAS,
-                        mr.REM_OBSERV OBSER,
-                        mr.REM_VALREM VALOR
-                        FROM MAEREMCXP mr
-                        WHERE mr.REM_PREFIJ = '$prefijo' AND mr.REM_NUMREM = '$numero'
-                        ) mr ON mi.MOV_PREFIJ = mr.PREFIJO
-            WHERE mi.MOV_PREFIJ = 'OCM' AND mi.MOV_NUMDOC = '000031780' ');
-            $sql->execute(array($prefijo, $numero));
-            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
-            return $data;
+        FROM METROCERAMICA.dbo.MOVINV2024 mi
+        INNER JOIN METROCERAMICA.dbo.MAEINV p ON mi.MOV_REFER = p.INV_REFER
+        INNER JOIN METROCERAMICA.dbo.MAECXP cp ON mi.MOV_CEDULA = cp.CLI_CEDULA
+        INNER JOIN (
+                    SELECT 
+                    mr.REM_PREFIJ PREFIJO,
+                    mr.REM_NUMREM NUMDOC,
+                    mr.REM_PLAZO DIAS,
+                    mr.REM_OBSERV OBSER,
+                    mr.REM_VALREM VALOR
+                    FROM METROCERAMICA.dbo.MAEREMCXP mr
+                    WHERE mr.REM_PREFIJ = '$prefijo' AND mr.REM_NUMREM = '$numero'
+                    ) mr ON mi.MOV_PREFIJ = mr.PREFIJO
+                    WHERE mi.MOV_PREFIJ = ? AND mi.MOV_NUMDOC = ?");
+        $sql->execute(array($prefijo, $numero));
+        $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
         }
     }
 ?>

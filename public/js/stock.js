@@ -276,8 +276,8 @@ function detalleorden(prefijo, numero, fecha){
                 if(item === ""){
                     tbl += '<tr><td colspan="7">No hay datos</td></tr>';
                 }else{
-                    totalund += Number(item.VALOR);
                     totalcant += Number(item.CANTIDAD);
+                    totalund += Number(item.VALOR);
                     total +=  Number(item.TOTAL);
                     tbl += `
                     <tr>
@@ -291,12 +291,39 @@ function detalleorden(prefijo, numero, fecha){
                     </tr>
                 `
                 }
-            });
             var title = `
             <h5 class="modal-title" role="title" id="exampleModalLabel">Detalle Orden de Compra <strong>${prefijo} - ${numero}</strong></h5>
             `
             var bodi = `
                 <div class="row item-center">
+                    <h6 class="item-left">Infomacion Proveedor</h6>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Documento</span>
+                            </div>
+                            <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${item.NIT}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">NOMBRE</span>
+                            </div>
+                            <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${item.PROVEE}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">PEDIDO</span>
+                            </div>
+                            <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${item.DOCAFEC}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row item-center">
+                    <h6 class="item-left">Infomacion Factura</h6>
                     <div class="col-md-3">
                         <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
@@ -326,7 +353,7 @@ function detalleorden(prefijo, numero, fecha){
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroup-sizing-default">Total Orden</span>
                             </div>
-                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${formatterPeso.format(Math.round(total))}">
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${formatterPeso.format(Math.round(item.TOTALDOC))}"">
                         </div>
                     </div>
                 </div>
@@ -352,8 +379,9 @@ function detalleorden(prefijo, numero, fecha){
                     </div>
                 </div>
                 `
-        document.getElementById('title').innerHTML = title
-        document.getElementById('body').innerHTML = bodi    
+                document.getElementById('title').innerHTML = title
+                document.getElementById('body').innerHTML = bodi
+            });
         document.getElementById('tblitems').innerHTML = tbl
         }
     });
