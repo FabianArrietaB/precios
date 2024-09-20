@@ -2,6 +2,8 @@ $(document).ready(function(){
     getPagination('#productos');
 });
 
+let modal = $('#modalorden');
+
 document.addEventListener('DOMContentLoaded', () => {
     const dateInput = document.getElementById('hasta')
     // formato ISO yyyy-mm-ddThh:mm:ss.ffffff
@@ -226,9 +228,11 @@ function existencias(){
                     if(item.PREFIJO == null && item.NUMERO == null){
                         orden = 'SIN ORDEN'
                         clase = 'text-danger'
+                        fechaord = 'SIN ORDEN'
                     }else{
                         orden =  item.PREFIJO + ' ' + item.NUMERO
                         clase = 'text-primary'
+                        fechaord = formatDate(item.FECHAORD)
                     }
                     tbl += `
                         <tr">
@@ -238,8 +242,8 @@ function existencias(){
                             <td style="width: 15%" class="text-center">${item.BODEGA} / ${round(item.STOCK, 2)}</td>
                             <td class="text-center" style="width: 15%" >${formatDate(item.FECCOMPRA)}</td>
                             <td class="text-center ${clasestock} " style="width: 15%" >${estado}</td>
-                            <td class="text-center ${clase} " style="width: 15%" >${orden}</td>
-                            <td class="text-center " style="width: 15%" >${formatDate(item.FECHAORD)}</td>
+                            <td ondblclick="detalleorden('${item.PREFIJO}', '${item.NUMERO}', '${item.FECHAORD}')" class="text-center ${clase} " style="width: 15%" >${orden}</td>
+                            <td class="text-center ${clase}" style="width: 15%" >${fechaord}</td>
                         </tr>
                     `
                 });
@@ -253,4 +257,105 @@ function existencias(){
             }
         }
     });
+}
+
+function detalleorden(prefijo, numero, fecha){
+    console.log(prefijo, numero)
+    $.ajax({
+        url : "../controller/inventarios/orden.php",
+        type : 'GET',
+        data : { prefijo : prefijo, numero : numero },
+        dataType: 'json',
+        success: function (data) {
+            //console.log(data);
+            let tbl = '';
+            let totalund = 0;
+            let totalcant = 0;
+            let total = 0;
+            data.forEach((item, index) => {
+                if(item === ""){
+                    tbl += '<tr><td colspan="7">No hay datos</td></tr>';
+                }else{
+                    totalund += Number(item.VALOR);
+                    totalcant += Number(item.CANTIDAD);
+                    total +=  Number(item.TOTAL);
+                    tbl += `
+                    <tr>
+                        <td style="width: 5%" class="text-center">${++index}</td>
+                        <td style="width: 15%" class="text-center">${item.REFERENCIA}</td>
+                        <td style="width: 40%" class="text-center">${item.PRODUCTO}</td>
+                        <td style="width: 10%" class="text-center">${item.UNDMED}</td>
+                        <td style="width: 10%" class="text-center text-info">${round(item.CANTIDAD, 2)}</td>
+                        <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.VALOR))}</td>
+                        <td style="width: 10%" class="text-center">${formatterPeso.format(Number(item.TOTAL))}</td>
+                    </tr>
+                `
+                }
+            });
+            var title = `
+            <h5 class="modal-title" role="title" id="exampleModalLabel">Detalle Orden de Compra <strong>${prefijo} - ${numero}</strong></h5>
+            `
+            var bodi = `
+                <div class="row item-center">
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Fecha</span>
+                            </div>
+                            <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${formatDate(fecha)}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Items</span>
+                            </div>
+                            <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${round(totalcant,2)}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Total</span>
+                            </div>
+                            <input disable type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${formatterPeso.format(Math.round(totalund))}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Total Orden</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="${formatterPeso.format(Math.round(total))}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="row student text-center" style="align-items: center">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped font-small">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" >#</th>
+                                        <th scope="col" >REFERENCIA</th>
+                                        <th scope="col" >NOMBRE</th>
+                                        <th scope="col" >UNDMED</th>
+                                        <th scope="col" >CANTIDAD</th>
+                                        <th scope="col" >PRECIO</th>
+                                        <th scope="col" >TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblitems">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                `
+        document.getElementById('title').innerHTML = title
+        document.getElementById('body').innerHTML = bodi    
+        document.getElementById('tblitems').innerHTML = tbl
+        }
+    });
+    modal.modal('show')
 }

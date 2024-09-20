@@ -221,5 +221,39 @@
                 return 0;
             }
         }
+
+        public function orden($prefijo, $numero){
+            $con = new Conexion();
+            $sql = $con->conectarFomplus()->prepare('SELECT 
+            mi.MOV_REFER REFERENCIA,
+            p.INV_NOMBRE PRODUCTO,
+            mi.MOV_FECHA FECHADOC,
+            mi.MOV_UNDMED UNDMED,
+            mi.MOV_CANTID CANTIDAD,
+            mi.MOV_CEDULA NIT,
+            cp.CLI_NOMBRE PROVEE,
+            mi.MOV_DOCAFE DOCAFEC,
+            mr.DIAS DIAS,
+            mr.OBSER OBSERV,
+            mr.VALOR VALOR,
+            mi.MOV_CODOPE OPERAD
+            FROM MOVINV2024 mi
+            INNER JOIN MAEINV p ON mi.MOV_REFER = p.INV_REFER
+            INNER JOIN MAECXP cp ON mi.MOV_CEDULA = cp.CLI_CEDULA
+            INNER JOIN (
+                        SELECT 
+                        mr.REM_PREFIJ PREFIJO,
+                        mr.REM_NUMREM NUMDOC,
+                        mr.REM_PLAZO DIAS,
+                        mr.REM_OBSERV OBSER,
+                        mr.REM_VALREM VALOR
+                        FROM MAEREMCXP mr
+                        WHERE mr.REM_PREFIJ = '$prefijo' AND mr.REM_NUMREM = '$numero'
+                        ) mr ON mi.MOV_PREFIJ = mr.PREFIJO
+            WHERE mi.MOV_PREFIJ = 'OCM' AND mi.MOV_NUMDOC = '000031780' ');
+            $sql->execute(array($prefijo, $numero));
+            $data = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
+        }
     }
 ?>
