@@ -6,18 +6,18 @@ class Conexion{
 
    public function conectar(){
       $servidor = "localhost";
-      $usuario = "root";
+      $usuario = "";
       $password = "";
-      $db = "updateprecios";
+      $db = "precios";
       $conexion = mysqli_connect($servidor, $usuario, $password, $db);
       return $conexion;
    }
 
    public function conectarBD(){
       $servidor = "SERVIDOR";
-      $usuario  = "consulta";
-      $password = "Sistema2024";
-      $db       = "METROPOLIS_EXT";
+      $usuario  = "";
+      $password = "";
+      $db       = "METRO";
       try {
          $conexion = new PDO("sqlsrv:server=$servidor;database=$db", $usuario, $password);
          $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -29,10 +29,9 @@ class Conexion{
 
    public function conectarFomplus(){
       $servidor = "SERVIDOR";
-      //$servidor = "SERVER";
-      $usuario  = "consulta";
-      $password = "Sistema2024";
-      $db       = "METROCERAMICA";
+      $usuario  = "";
+      $password = "";
+      $db       = "METROCERA";
       try {
          $conexion = new PDO("sqlsrv:server=$servidor;database=$db", $usuario, $password);
          $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -43,15 +42,10 @@ class Conexion{
    }
 
    public function conectarapolo(){
-      // $servidor = "auth-db486.hstgr.io";
-      // $usuario = "u914867005_apolo";
-      // $password = "Apolo2023";
-
-      $servidor = "localhost";
-      $usuario = "root";
+      $servidor = "auth-db486.hstgr.io";
+      $usuario = "";
       $password = "";
-
-      $db = "u914867005_apolo";
+      $db = "";
       $conexion = mysqli_connect($servidor, $usuario, $password, $db);
       return $conexion;
    }
